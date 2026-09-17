@@ -17,7 +17,7 @@ song_indices = pickle.load(open("models/song_indices.pkl", "rb"))
 st.title("🎵 Music Recommendation System")
 st.write("Find songs similar to your favorite track.")
 
-song_list = songs["track_name"].dropna().unique()
+song_list = songs["track_name"].dropna().unique().tolist()
 
 selected_song = st.selectbox(
     "Select a song",
@@ -29,14 +29,23 @@ number_of_recommendations = st.selectbox(
     [5, 10, 15]
 )
 
-def recommend(song_name, n_recommendations):
+genres = ["All"] + sorted(
+    songs["track_genre"].dropna().unique().tolist()
+)
+
+selected_genre = st.selectbox(
+    "Select Genre",
+    genres
+)
+
+def recommend(song_name, n_recommendations, genre):
     index = song_indices[song_name]
 
     song_vector = X_scaled[index].reshape(1, -1)
 
     distances, indices = knn.kneighbors(
         song_vector,
-        n_neighbors=n_recommendations + 1
+        n_neighbors=n_recommendations + 20
     )
 
     recommendations = []
@@ -44,104 +53,101 @@ def recommend(song_name, n_recommendations):
     for i in range(1, len(indices[0])):
         song_index = indices[0][i]
 
+        song_genre = songs.iloc[song_index]["track_genre"]
+
+        if genre != "All" and song_genre != genre:
+            continue
+
         recommendations.append({
             "Song": songs.iloc[song_index]["track_name"],
             "Artist": songs.iloc[song_index]["artists"],
-            "Genre": songs.iloc[song_index]["track_genre"],
+            "Genre": song_genre,
             "Similarity": round(1 - distances[0][i], 3)
         })
 
+        if len(recommendations) == n_recommendations:
+            break
+
     return pd.DataFrame(recommendations)
 
-st.sidebar.header("Genre Filter")
-
-genres = ["All"] + sorted(
-    songs["track_genre"].dropna().unique().tolist()
-)
-
-selected_genre = st.sidebar.selectbox(
-    "Select Genre",
-    genres
-)
-
-if st.button("Recommend Songs"):
+if st.button("🎵 Recommend Songs"):
 
     recommendations = recommend(
         selected_song,
-        number_of_recommendations
+        number_of_recommendations,
+        selected_genre
     )
-
-    if selected_genre != "All":
-        recommendations = recommendations[
-            recommendations["Genre"] == selected_genre
-        ]
 
     st.subheader("Recommended Songs")
 
-    st.dataframe(
-        recommendations,
-        use_container_width=True,
-        hide_index=True
-    )
-
-    selected_data = songs[
-        songs["track_name"] == selected_song
-    ].iloc[0]
-
-    st.subheader("Audio Characteristics")
-
-    col1, col2, col3, col4 = st.columns(4)
-
-    col1.metric(
-        "Danceability",
-        round(selected_data["danceability"], 2)
-    )
-
-    col2.metric(
-        "Energy",
-        round(selected_data["energy"], 2)
-    )
-
-    col3.metric(
-        "Valence",
-        round(selected_data["valence"], 2)
-    )
-
-    col4.metric(
-        "Tempo",
-        round(selected_data["tempo"], 2)
-    )
-
-    chart_data = pd.DataFrame({
-        "Feature": [
-            "Danceability",
-            "Energy",
-            "Valence",
-            "Tempo"
-        ],
-        "Value": [
-            selected_data["danceability"],
-            selected_data["energy"],
-            selected_data["valence"],
-            selected_data["tempo"]
-        ]
-    })
-
-    st.subheader("Audio Characteristics Chart")
-
-    fig = px.bar(
-        chart_data,
-        x="Feature",
-        y="Value",
-        title="Audio Characteristics"
-    )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-
     if len(recommendations) > 0:
+
+        st.dataframe(
+            recommendations,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        st.success(
+            f"{len(recommendations)} recommendations found."
+        )
+
+        selected_data = songs[
+            songs["track_name"] == selected_song
+        ].iloc[0]
+
+        st.subheader("Audio Characteristics")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        col1.metric(
+            "Danceability",
+            round(selected_data["danceability"], 2)
+        )
+
+        col2.metric(
+            "Energy",
+            round(selected_data["energy"], 2)
+        )
+
+        col3.metric(
+            "Valence",
+            round(selected_data["valence"], 2)
+        )
+
+        col4.metric(
+            "Tempo",
+            round(selected_data["tempo"], 2)
+        )
+
+        chart_data = pd.DataFrame({
+            "Feature": [
+                "Danceability",
+                "Energy",
+                "Valence",
+                "Tempo"
+            ],
+            "Value": [
+                selected_data["danceability"],
+                selected_data["energy"],
+                selected_data["valence"],
+                selected_data["tempo"]
+            ]
+        })
+
+        st.subheader("Audio Characteristics Chart")
+
+        fig = px.bar(
+            chart_data,
+            x="Feature",
+            y="Value",
+            title="Audio Characteristics"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
 
         st.subheader("Recommendation Similarity")
 
@@ -162,5 +168,8 @@ if st.button("Recommend Songs"):
             fig2,
             use_container_width=True
         )
+
     else:
-        st.warning("No songs found for the selected genre.")
+        st.warning(
+            "No songs found for the selected genre. Try another genre."
+        )       
