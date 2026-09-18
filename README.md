@@ -85,19 +85,19 @@ The application displays a similarity score for each recommendation.
 
 ## 💻 Run the Project
 
-Clone the repository:
+**Clone the repository:**
 
 git clone https://github.com/Kirtan0024/Music-Recommendation-System.git
 
-Open the project:
+**Open the project:**
 
 cd Music-Recommendation-System
 
-Install the required libraries:
+**Install the required libraries:**
 
 pip install -r requirements.txt
 
-Run the Streamlit application:
+**Run the Streamlit application:**
 
 streamlit run app.py
 
