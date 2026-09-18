@@ -1,11 +1,11 @@
-🎵 Music Recommendation System
-📌 Project Overview
+# 🎵 Music Recommendation System
+## 📌 Project Overview**
 
 The Music Recommendation System is a machine learning project that recommends songs similar to a selected song based on audio characteristics.
 
 The system analyzes music features and uses similarity-based recommendations to find songs with similar audio patterns.
 
-🚀 Features
+## 🚀 Features
 Select a song
 Choose number of recommendations
 Filter recommendations by genre
@@ -19,7 +19,8 @@ Show tempo
 Audio characteristics chart
 Recommendation similarity chart
 Interactive Streamlit dashboard
-🛠️ Technologies Used
+
+## 🛠️ Technologies Used
 Python
 Pandas
 NumPy
@@ -30,7 +31,8 @@ Streamlit
 Jupyter Notebook
 Git
 GitHub
-📊 Dataset
+
+## 📊 Dataset
 
 The project uses a music dataset containing song information and audio features.
 
@@ -48,7 +50,8 @@ speechiness
 acousticness
 instrumentalness
 liveness
-🤖 Machine Learning
+
+## 🤖 Machine Learning
 
 The recommendation system uses numerical audio features to measure similarity between songs.
 
@@ -69,7 +72,8 @@ Similarity Calculation
 Recommendation System
    ↓
 Streamlit Application
-🎯 How the Recommendation Works
+
+## 🎯 How the Recommendation Works
 
 A user selects a song from the application.
 
@@ -79,7 +83,7 @@ Songs with similar audio characteristics are returned as recommendations.
 
 The application displays a similarity score for each recommendation.
 
-💻 Run the Project
+## 💻 Run the Project
 
 Clone the repository:
 
@@ -99,8 +103,15 @@ streamlit run app.py
 
 The application will open in your browser.
 
-📁 Project Structure
+## 📁 Project Structure
+
+```text
 Music-Recommendation-System/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── .gitignore
 │
 ├── data/
 │   └── songs.csv
@@ -114,35 +125,27 @@ Music-Recommendation-System/
 │   ├── X_scaled.pkl
 │   └── song_indices.pkl
 │
-├── screenshots/
-│   ├── eda.png
-│   ├── recommendation.png
-│   └── dashboard.png
-│
-├── app.py
-├── requirements.txt
-├── README.md
-└── .gitignore
+└── screenshots/
+    ├── eda.png
+    ├── recommendation.png
+    └── dashboard.png
+```
 
+## 📸 Screenshots
 
-📸 ## Screenshots
-
-EDA
 ### EDA
+
 ![EDA](screenshots/eda.png)
 
-Recommendation Output
-
 ### Recommendation System
+
 ![Recommendation](screenshots/recommendation.png)
 
-Streamlit Dashboard
-
 ### Dashboard
+
 ![Dashboard](screenshots/dashboard.png)
 
-
-🔮 Future Improvements
+## 🔮 Future Improvements
 Add album artwork
 Add song preview
 Add popularity filtering
