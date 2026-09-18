@@ -1,5 +1,5 @@
 # 🎵 Music Recommendation System
-## 📌 Project Overview**
+## 📌 Project Overview
 
 The Music Recommendation System is a machine learning project that recommends songs similar to a selected song based on audio characteristics.
 
